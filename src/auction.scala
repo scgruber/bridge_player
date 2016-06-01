@@ -78,7 +78,7 @@ case class HumanBidder(h: Hand, p: Position) extends Bidder {
     }
   }
 }
-case class AIBidder(h: Hand, p: Position) extends Bidder {
+case class YellowCardBidder(h: Hand, p: Position) extends Bidder {
   def makeBid(bids: List[Call]): Call = {
     val bid = if (isOpening(bids)) {
       if (h.isBalanced) {

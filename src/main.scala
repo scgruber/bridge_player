@@ -22,6 +22,6 @@ object BridgePlayer {
     west.print()
 
     val a = new Auction(North)
-    a.run(Map(North -> AIBidder(north,North), East -> HumanBidder(east,East), South -> AIBidder(south,South), West -> AIBidder(west,West)))
+    a.run(Map(North -> YellowCardBidder(north,North), East -> YellowCardBidder(east,East), South -> YellowCardBidder(south,South), West -> YellowCardBidder(west,West)))
   }
 }
