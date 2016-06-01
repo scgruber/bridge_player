@@ -80,9 +80,27 @@ case class HumanBidder(h: Hand, p: Position) extends Bidder {
 }
 case class AIBidder(h: Hand, p: Position) extends Bidder {
   def makeBid(bids: List[Call]): Call = {
-    val bid = Pass
+    val bid = if (isOpening(bids)) {
+      if (h.isBalanced) {
+        h.points match {
+          case x if 15 <= x && x <= 17 => Bid(NoTrump,1)
+          case x if 20 <= x && x <= 21 => Bid(NoTrump,2)
+          case x if 25 <= x && x <= 27 => Bid(NoTrump,3)
+          case _ => Pass
+        }
+      } else {
+        Pass
+      }
+    } else {
+      Pass
+    }
+
     println(p.toString + " bids " + bid.toString)
     bid
+  }
+
+  private def isOpening(bids: List[Call]): Boolean = {
+    bids.forall(_ == Pass)
   }
 }
 

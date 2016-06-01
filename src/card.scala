@@ -49,6 +49,17 @@ class Hand(cards: Array[Card]) {
     println("Points: " + this.points.toString)
     println
   }
+
+  def isBalanced: Boolean = {
+    val spadeCount = cs.count { case Some(Card(Spade,_)) => true; case _ => false }
+    val heartCount = cs.count { case Some(Card(Heart,_)) => true; case _ => false }
+    val diamondCount = cs.count { case Some(Card(Diamond,_)) => true; case _ => false }
+    val clubCount = cs.count { case Some(Card(Club,_)) => true; case _ => false }
+    ( 2 <= spadeCount && spadeCount <= 4
+      && 2 <= heartCount && heartCount <= 4
+      && 2 <= diamondCount && diamondCount <= 4
+      && 2 <= clubCount && clubCount <= 4)
+  }
 }
 
 case class Card(s:Suit,r:Rank) {
