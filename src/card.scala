@@ -21,7 +21,6 @@ class Hand(cards: Array[Card]) {
   var cs = cards.map(c => Some(c))
 
   def points: Int = {
-    var p = 0
     cs collect {
       case Some(Card(_,Ace)) => 4
       case Some(Card(_,King)) => 3
@@ -33,6 +32,21 @@ class Hand(cards: Array[Card]) {
         case _ => 2
       }
       case Some(Card(_,Jack)) => 1
+    } sum
+  }
+
+  def pointsInSuit(s: Suit): Int = {
+    cs collect {
+      case Some(Card(`s`,Ace)) => 4
+      case Some(Card(`s`,King)) => 3
+      case Some(Card(`s`,Queen)) => cs.count {
+        case Some(Card(`s`,_)) => true
+        case _ => false
+      } match {
+        case 1 => 1
+        case _ => 2
+      }
+      case Some(Card(`s`,Jack)) => 1
     } sum
   }
 

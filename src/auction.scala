@@ -103,10 +103,16 @@ case class YellowCardBidder(h: Hand, p: Position) extends Bidder {
         }
       } else if (hasOpeningStrength(h, bids.size+1)) {
         val dist = h.distribution
-        if (dist(Spade) >= 5) {
-          Bid(Spade,1)
-        } else if (dist(Heart) >= 5) {
-          Bid(Heart,1)
+        if (dist(Spade) >= 5 || dist(Heart) >= 5) {
+          // Prefer the longer (then stronger) major suit
+          (dist(Spade) compare dist(Heart)).signum match {
+            case 1 => Bid(Spade,1)
+            case -1 => Bid(Heart,1)
+            case 0 => (h.pointsInSuit(Spade) compare h.pointsInSuit(Heart)).signum match {
+              case -1 => Bid(Heart,1)
+              case _ => Bid(Spade,1)
+            }
+          }
         } else if (dist(Diamond) >= 4) {
           Bid(Diamond,1)
         } else if (dist(Club) >= 3) {
