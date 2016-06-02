@@ -70,40 +70,31 @@ case class Card(s:Suit,r:Rank) {
   }
 }
 
-abstract class Suit {
+abstract class Suit extends Ordered[Suit] {
   def toString: String
-  def kind: SuitKind
   val magnitude: Int
+
+  def compare(that: Suit): Int = this.magnitude - that.magnitude
 }
-case object NoTrump extends Suit {
+abstract class NoSuit extends Suit
+abstract class MajorSuit extends Suit
+abstract class MinorSuit extends Suit
+case object NoTrump extends NoSuit {
   override def toString: String = "No Trump"
-  def kind: SuitKind = Major
   val magnitude = 5
 }
-case object Spade extends Suit {
-  override def toString: String = "Spade"
-  def kind: SuitKind = Major
+case object Spade extends MajorSuit {
   val magnitude = 4
 }
-case object Heart extends Suit {
-  override def toString: String = "Heart"
-  def kind: SuitKind = Major
+case object Heart extends MajorSuit {
   val magnitude = 3
 }
-case object Diamond extends Suit {
-  override def toString: String = "Diamond"
-  def kind: SuitKind = Minor
+case object Diamond extends MinorSuit {
   val magnitude = 2
 }
-case object Club extends Suit {
-  override def toString: String = "Club"
-  def kind: SuitKind = Minor
+case object Club extends MinorSuit {
   val magnitude = 1
 }
-
-abstract class SuitKind
-case object Major extends SuitKind
-case object Minor extends SuitKind
 
 abstract class Rank extends Ordered[Rank] {
   def toString: String
