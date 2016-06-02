@@ -51,14 +51,14 @@ class Hand(cards: Array[Card]) {
   }
 
   def isBalanced: Boolean = {
-    val spadeCount = cs.count { case Some(Card(Spade,_)) => true; case _ => false }
-    val heartCount = cs.count { case Some(Card(Heart,_)) => true; case _ => false }
-    val diamondCount = cs.count { case Some(Card(Diamond,_)) => true; case _ => false }
-    val clubCount = cs.count { case Some(Card(Club,_)) => true; case _ => false }
-    ( 2 <= spadeCount && spadeCount <= 4
-      && 2 <= heartCount && heartCount <= 4
-      && 2 <= diamondCount && diamondCount <= 4
-      && 2 <= clubCount && clubCount <= 4)
+    this.distribution.forall { case (_,ct) => (2 <= ct) && (ct <= 4) }
+  }
+
+  def distribution: Map[Suit, Int] = {
+    Map(Spade -> cs.count { case Some(Card(Spade,_)) => true; case _ => false },
+      Heart -> cs.count { case Some(Card(Heart,_)) => true; case _ => false },
+      Diamond -> cs.count { case Some(Card(Diamond,_)) => true; case _ => false },
+      Club -> cs.count { case Some(Card(Club,_)) => true; case _ => false })
   }
 }
 

@@ -88,6 +88,19 @@ case class YellowCardBidder(h: Hand, p: Position) extends Bidder {
           case x if 25 <= x && x <= 27 => Bid(NoTrump,3)
           case _ => Pass
         }
+      } else if ((h.points >= 13 && bids.size <= 1) || (h.points >= 12 && bids.size == 2) || h.points >= 11 && bids.size == 3) {
+        val dist = h.distribution
+        if (dist(Spade) >= 5) {
+          Bid(Spade,1)
+        } else if (dist(Heart) >= 5) {
+          Bid(Heart,1)
+        } else if (dist(Diamond) >= 4) {
+          Bid(Diamond,1)
+        } else if (dist(Club) >= 3) {
+          Bid(Club,1)
+        } else {
+          Pass
+        }
       } else {
         Pass
       }
