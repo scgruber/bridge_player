@@ -90,7 +90,18 @@ case class YellowCardBidder(h: Hand, p: Position) extends Bidder {
         }
       } else if (h.points >= 22) {
         Bid(Club,2)
-      } else if ((h.points >= 13 && bids.size <= 1) || (h.points >= 12 && bids.size == 2) || h.points >= 11 && bids.size == 3) {
+      } else if (!hasOpeningStrength(h, bids.size+1) && h.points >= 5) {
+        val dist = h.distribution
+        if (dist(Spade) >= 6 && suitIsQuality(Spade, h)) {
+          Bid(Spade,2)
+        } else if (dist(Heart) >= 6 && suitIsQuality(Heart, h)) {
+          Bid(Heart,2)
+        } else if (dist(Diamond) >= 6 && suitIsQuality(Diamond, h)) {
+          Bid(Diamond,2)
+        } else {
+          Pass
+        }
+      } else if (hasOpeningStrength(h, bids.size+1)) {
         val dist = h.distribution
         if (dist(Spade) >= 5) {
           Bid(Spade,1)
@@ -116,6 +127,18 @@ case class YellowCardBidder(h: Hand, p: Position) extends Bidder {
 
   private def isOpening(bids: List[Call]): Boolean = {
     bids.forall(_ == Pass)
+  }
+
+  private def hasOpeningStrength(h: Hand, turn: Int): Boolean = turn match {
+    case (1|2) => h.points >= 13
+    case 3 => h.points >= 12
+    case 4 => h.points >= 11
+  }
+
+  private def suitIsQuality(s:Suit, h:Hand): Boolean = {
+    val topThree = h.cs.count { case Some(Card(`s`,(Ace|King|Queen))) => true; case _ => false }
+    val topFive = h.cs.count { case Some(Card(`s`,(Ace|King|Queen|Jack|Ten))) => true; case _ => false }
+    topThree >= 2 || topFive >= 3
   }
 }
 
